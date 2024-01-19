@@ -1,0 +1,21 @@
+*{
+    background-color: #daa06d;
+    padding:5px;
+    
+}
+
+.body {
+    margin: 0;
+    font-family: 'Prompt', sans-serif;
+    color:black;
+    background:black;
+}
+
+ol {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    min-height: 400px;
+    padding:100px 20vw;
+}
