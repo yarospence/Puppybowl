@@ -1,12 +1,13 @@
 //build our API
 
-const api = 'https://fsa-puppy-bowl.herokuapp.com/api/2310-FSA-ET-Web-FT-SF/';
+const apiBaseURL = 'https://fsa-puppy-bowl.herokuapp.com/api/2310-FSA-ET-Web-FT-SF/';
 
 const state = {
-    allPlayers: [],
-    playerId: 0
-
+    allPlayers: []
 }
+
+const main = document.querySelector(`main`);
+
 // console.log(state)
 
 //view the roster of players 
@@ -24,8 +25,19 @@ const getPlayerDetails = async (id) => {
     const response = await fetch(`${api}players/${id}`);
     const responseJson = await response.json();
     const playerDetails = responseJson.data;
-    console.log(playerDetails);
+    renderDetails(playerDetails);
 }
+
+const renderDetails = (details) => {
+    console.log(details.player.name, `this is working`);
+    const html = `
+        <h2>${details.player.name}</h2>
+        <h4>${details.player.breed}</h4>
+        `
+  ;
+    main.insertAdjacentHTML(`afterbegin`, html);
+}
+//////////////////////////////////////////////////////////////////////
 //render means display, this brings it to the front
 const renderAllPlayers = () => {
     const playerNames = state.allPlayers.map((singlePlayer) => {
@@ -34,11 +46,7 @@ const renderAllPlayers = () => {
     
     const ol = document.createElement(`ol`);
     ol.innerHTML = playerNames.join(``);
-    //console.log(ol);
-    const main = document.querySelector(`main`);
-    //console.log(main);
     main.appendChild(ol);
-    //now we need to take console.log to the display
 
     const listItems = document.querySelectorAll(`li`);
     listItems.forEach((playerlistItem) => {
@@ -49,12 +57,38 @@ const renderAllPlayers = () => {
     
 }
 getAllPlayers();
-getPlayerDetails();
-renderAllPlayers();
+////////////////////////////////////////////////////////////////
+//we need to be able to add players to the database POST
+
+const form = document.querySelector(`form`);
+form.addEventListener(`submit`, async (event) => {
+    event.preventDefault();
+    console.log(`form submitted`);
+
+    const nameInput =document.querySelector(`#name`);
+    const imageUrlInput = document.querySelector(`#imgurl`);
+    const breedInput = document.querySelector(`#breed`);
+    const statusInput = document.querySelector(`#status`);
+    
+    const newPlayer = await fetch(`${apiBaseURL}players`, {
+        method: `POST`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: nameInput.value,
+            image: imageUrlInput.value,
+            breed: breedInput.value,
+            status: statusInput.value
+        })
+    });
+
+    console.log(newPlayer);
+
+});
 
 
-
-
-//observe a player's details from the API 
-
-//Add players to the proper roster
+const addNewPlayer = () => {
+    const nameInput = document.querySelector(`#name`);
+    console.log(nameInput);
+}
